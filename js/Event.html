@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event</title>
+    <script src="../js/Event.js"></script>
+</head>
+<body onclick="change_color();">
+    <input value="Нажми меня" onclick="alert('Клик!')" type="button">
+
+    <input id="button" type="button" onclick="countRabbits()" value="Считать кроликов!"/>
+
+    <h1 style="text-align: center;" onclick="text('h1');"> Анкета Пользователя</h1>
+    <br>
+    <h2 id="fio" onclick="text('h2');"> Ф.И.О.: </h2>
+    <h2 id="age" onclick="alert('Teg - h2');"> Возраст: </h2>
+    <h2 id="email" onclick="text('h2');"> email: </h2>
+
+    <img id="pic" onclick="text('img');" src="../Image/user.png" alt="user's photo"
+         style="height: 175px; width: 170px; position: absolute; top: 86px; left: 456px;">
+
+    <img src="../Image/smile.png" id="picSmile" alt="smile" style=" height: 100px;"
+         onmouseover="change2();" onmouseout="change1();">
+
+    <!--Доступ к элементу через this-->
+    <button onclick="alert(this.innerHTML)"> через this </button>
+
+    <!--------------------------------------------------------------------------------------------------->
+    <input id="elem" type="button" value="EventListener"/>
+    <script>
+        function handler1() {
+            alert('Спасибо!');
+        }
+        function handler2() {
+            alert('Спасибо ещё раз!');
+        }
+        elem.onclick = function() { alert("Привет"); };
+        elem.addEventListener("click", handler1); // Спасибо!
+        elem.addEventListener("click", handler2); // Спасибо ещё раз!
+        elem.onclick = function(event) {
+            // вывести тип события, элемент и координаты клика
+            alert(event.type + " на " + event.currentTarget);
+            alert(event.clientX + ":" + event.clientY);
+        }
+        /* addEventListener и removeEventListener */
+        /*
+         element.addEventListener(event, handler[, phase]);
+         Назначение обработчика событий
+         event       Имя события, например click
+         handler     Ссылка на функцию,
+         которую надо поставить обработчиком.
+         phase       Необязательный аргумент, «фаза»
+
+         // передать те же аргументы, что были у addEventListener
+         element.removeEventListener(event, handler[, phase]);
+         Удаление требует именно ту же функцию
+         */
+    </script>
+    <!------------------------------------------------------------------------------------------------------>
+    <style>
+        button {
+            transition: width 1s;
+            width: 100px;
+        }
+        .wide {
+            width: 300px;
+        }
+    </style>
+    <button id="element" onclick="this.classList.toggle('wide');">
+        Нажми меня
+    </button>
+    <!-------------------------------------------------------------------------------------------------------------->
+    <input type="button" onclick="this.style.display='none'"
+           value="Нажми, чтобы меня спрятать" />
+    <!-------------------------------------------------------------------------------------------------------------->
+    <textarea rows="8" cols="40" id="area"
+              placeholder="Кликни на меня"></textarea>
+    <script>
+        area.onmousedown = function(e) { this.value += "mousedown\n";};
+        area.onmouseup = function(e) { this.value += "mouseup\n";};
+        area.onclick = function(e) { this.value += "click\n";};
+    </script>
+    <!-------------------------------------------------------------------------------------------------------------->
+    <p>При фокусе на поле оно изменит значение.</p>
+    <label>
+        <input type="text" onfocus="this.value = 'Фокус!'"
+               value="Изменения при фокусе">
+    </label>
+    <input type="button" id="buton" value="Нажми меня">
+    <input type="text" id="tex" size="60">
+    <script>
+        button.onclick = function() {
+            tex.value += ' -> в onclick ';
+
+            tex.onfocus(); // вызов инициирует событие onfocus
+
+            tex.value += ' из onclick -> ';
+        };
+        tex.onfocus = function() {
+            tex.value += ' ! focus ! ';
+        };
+    </script>
+    <!----------------------------------------------------------------------------------------------------------------->
+    <p id="line"></p>
+    <script>
+        //функция-обработчик, которая будет выводить символы на экран
+        function print(event) {
+            //event - объект-событие определяем
+            // события для разных браузеров
+            var ev = event;
+            if (ev === undefined) {
+                ev = window.event;
+            }
+            //к содержимому строки добавляем новый символ "&#" нужно,
+            // чтоб из кода символа получить сам символ (его изображение типа a,b,c)
+            line.innerHTML = line.innerHTML + "&#" + ev.keyCode;
+        }
+        //связываем события нажатия кнопки клавиатуры и функцию-обраблотчик
+        document.body.onkeydown = print;
+    </script>
+
+<div id="menu">
+    <button data-action="save">Сохранить</button>
+    <button data-action="load">Загрузить</button>
+    <button data-action="search">Поиск</button>
+</div>
+
+<script>
+    function Menu(elem) {
+        this.save = function() {
+            alert( 'сохраняю' );
+        };
+        this.load = function() {
+            alert( 'загружаю' );
+        };
+        this.search = function() {
+            alert( 'ищу' );
+        };
+
+        var self = this;
+
+        elem.onclick = function(e) {
+            var target = e.target;
+            var action = target.getAttribute('data-action');
+            if (action) {
+                self[action]();
+            }
+        };
+    }
+    new Menu(menu);
+</script>
+    <h2> Отслеживаем положения указателя мыши</h2>
+    <!--Назначаем строки на странице, в которых будем выводить координаты положения курсора
+    Строкам даем идентификаторы, чтоб в них можно было что-то записать через скрипт -->
+    <i>Позиция по Х: </i><p id="X"> 0 </p>
+    <i>Позиция по Y: </i><p id="Y"> 0 </p>
+<script>
+    //задаем размер области на странице, в которой будем отслеживать координаты курсора
+    /*document.body.style.width = "1024px";
+    document.body.style.height = "780px";*/
+    //функция, отслеживающая координаты курсора
+    function Moving(e) {//e - объект-событие
+        //определяем события для разных браузеров
+        var ev = e;
+        if (ev === undefined) {
+            ev = window.event;
+        }
+        //clientX определяет положение курсора по горизонтали после события движения мыши
+        X.innerHTML = ev.clientX;
+        //clientY определяет положение курсора по вертикали после события движения мыши
+        Y.innerHTML = ev.clientY;
+    }
+    //связываем обработчик события движения мыши и функцию, которая будем выполнятся при движении
+    document.body.onmousemove = Moving;
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
